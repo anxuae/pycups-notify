@@ -5,7 +5,7 @@
 
 
 The ``pycups-notifier`` library is an extension to the `pycups <https://github.com/OpenPrinting/pycups>`_
-one. It enables registration to CUPS RSS ("Really Simple Syndication") notifications.
+one. It enables subscription to CUPS RSS notifications.
 
 This library implements the `Event Notifier <http://www.marco.panizza.name/dispenseTM/slides/exerc/eventNotifier/eventNotifier.html>`_
 pattern to match with the `design description <https://www.cups.org/doc/spec-design.html>`_
