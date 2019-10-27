@@ -32,10 +32,14 @@ Usage
     def on_event(event):
         print(event)
 
+    # Create a CUPS connection
     conn = cups.Connection()
 
+    # Create a new subscriber
     sub = Subscriber(conn)
-    sub.subscribe(on_event, filters=('all'))
+
+    # Subscribe the callback to all CUPS events
+    sub.subscribe(on_event)
 
     try:
         while True:
