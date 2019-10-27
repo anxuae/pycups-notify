@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import threading
-import collections
 from xml.etree import ElementTree
 try:
     from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -15,8 +14,6 @@ from cups_notifier import event
 
 
 class NotificationHandler(BaseHTTPRequestHandler):
-
-    _last_notif = collections.deque(maxlen=500)
 
     def get_chunk_size(self):
         size_str = self.rfile.read(2)
@@ -55,12 +52,7 @@ class NotificationHandler(BaseHTTPRequestHandler):
             for channel in root.iterfind('channel'):
                 for item in reversed([e for e in channel.iterfind('item')]):
                     txt = ElementTree.tostring(item, encoding='utf8')
-
-                    # CUPS send the last X notifs thus same notif can be
-                    # received multiple time. Avoid redundency by filtering.
-                    if txt not in NotificationHandler._last_notif:
-                        NotificationHandler._last_notif.append(txt)
-                        self.server.callback(dict((elem.tag, elem.text) for elem in item.iter() if elem.text.strip()))
+                    self.server.callback(dict((elem.tag, elem.text) for elem in item.iter() if elem.text.strip()))
 
         self.send_response(200)
         self.end_headers()
@@ -68,13 +60,14 @@ class NotificationHandler(BaseHTTPRequestHandler):
 
 class NotificationListerner(HTTPServer):
 
-    def __init__(self, cups_conn, callback, filters=(event.CUPS_EVT_ALL,), address='localhost', port=9988):
+    def __init__(self, cups_conn, callback, filters=None, address='localhost', port=9988):
         HTTPServer.__init__(self, (address, port), NotificationHandler)
         self._conn = cups_conn
         self._thread = None
-        self._callback = callback
-        self._filters = filters
+        self._filters = filters or [event.CUPS_EVT_ALL]
         self._rss_uri = 'rss://{}:{}'.format(self.server_address[0], self.server_address[1])
+
+        self.callback = callback
 
     def start(self):
         """Start the notification server.
@@ -91,7 +84,7 @@ class NotificationListerner(HTTPServer):
         cups_uri = "ipp://localhost:{}".format(cups.getPort())
         self._conn.createSubscription(cups_uri,
                                       recipient_uri=self._rss_uri,
-                                      events=list(self._filters))
+                                      events=self._filters)
 
     def is_running(self):
         """Return True if the notification server is started.

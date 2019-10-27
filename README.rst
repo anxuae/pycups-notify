@@ -35,7 +35,7 @@ Usage
     conn = cups.Connection()
 
     sub = Subscriber(conn)
-    sub.add_callback(on_event, filters=('all'))
+    sub.subscribe(on_event, filters=('all'))
 
     try:
         while True:

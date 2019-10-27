@@ -17,10 +17,12 @@ class Subscriber(object):
     def __del__(self):
         self.stop()
 
-    def add_callback(self, cb, filters=(event.CUPS_EVT_ALL,)):
+    def subscribe(self, cb, filters=None):
         """Add a new callback.
         """
         assert callable(cb), "Callback is not callable"
+        if not filters:
+            filters = [event.CUPS_EVT_ALL]
         self._callbacks[cb] = NotificationListerner(self._conn, cb, filters, self.address)
         self._callbacks[cb].start()
 
@@ -28,8 +30,9 @@ class Subscriber(object):
         """Do cleanup actions.
         """
         for cb, server in self._callbacks.items():
-            LOGGER.debug("Stopping notification ")
+            LOGGER.debug("Stopping notification server")
             server.shutdown()
+        self._callbacks = {}
 
 
 def main():
@@ -43,7 +46,7 @@ def main():
     conn = cups.Connection()
 
     sub = Subscriber(conn)
-    sub.add_callback(on_event, filters=('all'))
+    sub.subscribe(on_event)
 
     try:
         while True:
