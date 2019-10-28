@@ -45,8 +45,44 @@ Usage
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
+        pass
+    finally:
         sub.stop()
 
+It is possible to define a list of events on which the callback is binded:
+
+.. code-block:: python
+
+    import cups
+    from cups_notify import Subscriber, events
+
+    def my_callback(event):
+        print(event)
+
+    # Create a new subscriber
+    sub = Subscriber(cups.Connection())
+
+    # Subscribe the callback
+    sub.subscribe(my_callback, [event.CUPS_EVT_JOB_CREATED,
+                                event.CUPS_EVT_JOB_COMPLETED,
+                                event.CUPS_EVT_JOB_STOPPED])
+
+If the CUPS server is not running on the same computer as the subscriber application,
+the local IP address (same network than the CUPS server) have to be provided to the
+subscriber class:
+
+.. code-block:: python
+
+    # Create a CUPS connection
+    cups.setServer('198.20.34.1')
+    conn = cups.Connection()
+
+    # Create a new subscriber
+    sub = Subscriber(conn, '198.20.34.26')
+
+
+Run
+---
 
 A simple listener can be started by typing the following command line::
 
