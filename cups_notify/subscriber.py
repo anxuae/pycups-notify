@@ -18,7 +18,7 @@ class Subscriber(object):
         self.stop()
 
     def subscribe(self, cb, filters=None):
-        """Add a new callback.
+        """Subscribe a new callback.
         """
         assert callable(cb), "Callback is not callable"
         if not filters:
@@ -27,6 +27,13 @@ class Subscriber(object):
             self._callbacks[cb].shutdown()
         self._callbacks[cb] = NotificationListerner(self._conn, cb, filters, self.address)
         self._callbacks[cb].start()
+
+    def unsubscribe(self, cb):
+        """Subscribe the given callback.
+        """
+        server = self._callbacks.pop(cb, None)
+        if server:
+            server.shutdown()
 
     def stop(self):
         """Do cleanup actions.
@@ -54,4 +61,6 @@ def main():
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
+        pass
+    finally:
         sub.stop()
