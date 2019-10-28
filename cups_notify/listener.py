@@ -9,8 +9,8 @@ except ImportError:
     from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 
 import cups
-from cups_notifier import LOGGER
-from cups_notifier import event
+from cups_notify import LOGGER
+from cups_notify import event
 
 
 class NotificationHandler(BaseHTTPRequestHandler):
@@ -60,8 +60,8 @@ class NotificationHandler(BaseHTTPRequestHandler):
 
 class NotificationListerner(HTTPServer):
 
-    def __init__(self, cups_conn, callback, filters=None, address='localhost', port=9988):
-        HTTPServer.__init__(self, (address, port), NotificationHandler)
+    def __init__(self, cups_conn, callback, filters=None, address='localhost'):
+        HTTPServer.__init__(self, (address, 9988), NotificationHandler)
         self._conn = cups_conn
         self._thread = None
         self._filters = filters or [event.CUPS_EVT_ALL]

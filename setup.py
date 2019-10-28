@@ -9,14 +9,14 @@ from setuptools import setup, find_packages
 
 HERE = osp.abspath(osp.dirname(__file__))
 sys.path.insert(0, HERE)
-import cups_notifier
+import cups_notify
 
 
 def main():
     setup(
-        name="pycups-notifier",
-        version=cups_notifier.__version__,
-        description=cups_notifier.__doc__,
+        name="pycups-notify",
+        version=cups_notify.__version__,
+        description=cups_notify.__doc__,
         long_description=open(osp.join(HERE, 'README.rst'), encoding='utf-8').read(),
         long_description_content_type='text/x-rst',
         classifiers=[
@@ -32,8 +32,8 @@ def main():
             'Topic :: Printing',
         ],
         author="Antoine Rousseaux",
-        url="https://github.com/anxuae/pycups-notifier",
-        download_url="https://github.com/anxuae/pycups-notifier/archive/{}.tar.gz".format(cups_notifier.__version__),
+        url="https://github.com/anxuae/pycups-notify",
+        download_url="https://github.com/anxuae/pycups-notify/archive/{}.tar.gz".format(cups_notify.__version__),
         license='MIT license',
         platforms=['unix', 'linux'],
         keywords=[
@@ -52,7 +52,7 @@ def main():
                 {'universal': True}
         },
         zip_safe=False,  # Don't install the lib as an .egg zipfile
-        entry_points={'console_scripts': ["pycups-notifier = cups_notifier.subscriber:main"]},
+        entry_points={'console_scripts': ["pycups-notify = cups_notify.subscriber:main"]},
     )
 
 
