@@ -29,8 +29,8 @@ Usage
     import cups
     from cups_notify import Subscriber
 
-    def on_event(event):
-        print(event)
+    def on_event(evt):
+        print(evt)
 
     # Create a CUPS connection
     conn = cups.Connection()
@@ -54,10 +54,10 @@ It is possible to define a list of events on which the callback is binded:
 .. code-block:: python
 
     import cups
-    from cups_notify import Subscriber, events
+    from cups_notify import Subscriber, event
 
-    def my_callback(event):
-        print(event)
+    def my_callback(evt):
+        print(evt.title, evt.description)
 
     # Create a new subscriber
     sub = Subscriber(cups.Connection())
@@ -67,9 +67,9 @@ It is possible to define a list of events on which the callback is binded:
                                 event.CUPS_EVT_JOB_COMPLETED,
                                 event.CUPS_EVT_JOB_STOPPED])
 
-If the CUPS server is not running on the same computer as the subscriber application,
-the local IP address (same network than the CUPS server) have to be provided to the
-subscriber class:
+If the CUPS server is not running on the same computer as the subscriber application
+one, the local IP address (same network than the CUPS server) have to be provided to
+the subscriber class:
 
 .. code-block:: python
 

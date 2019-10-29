@@ -52,9 +52,7 @@ def main():
     def on_event(evt):
         print(evt)
 
-    conn = cups.Connection()
-
-    sub = Subscriber(conn)
+    sub = Subscriber(cups.Connection())
     sub.subscribe(on_event)
 
     try:
