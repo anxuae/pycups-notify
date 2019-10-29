@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from xml.etree import ElementTree
+from datetime import datetime
 
 
 CUPS_EVT_ALL = 'all'  # All events
@@ -25,8 +25,15 @@ CUPS_EVT_SERVER_STOPPED = 'server-stopped'  # Event when the server is shutdown
 
 class CupsEvent(object):
 
-    def __init__(self, xml_event):
-        self.xml = xml_event
+    def __init__(self, data):
+        self.guid = int(data['guid'])
+        self.title = data.get('title', '')
+        self.description = data.get('description', '')
+        date = data.get('pubDate', None)
+        if date:
+            self.timestamp = datetime.strptime(date, "%a, %d %b %Y %H:%M:%S GMT")
+        else:
+            self.timestamp = datetime.now()
 
     def __str__(self):
-        return self.xml
+        return "[{:04d}] [{}] {} - {}".format(self.guid, self.timestamp, self.title, self.description)
