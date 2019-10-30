@@ -47,7 +47,7 @@ Usage
     except KeyboardInterrupt:
         pass
     finally:
-        sub.stop()
+        sub.unsubscribe_all()
 
 It is possible to define a list of events on which the callback is binded:
 

@@ -15,7 +15,7 @@ class Subscriber(object):
         self.address = local_address
 
     def __del__(self):
-        self.stop()
+        self.unsubscribe_all()
 
     def subscribe(self, cb, filters=None):
         """Subscribe a new callback.
@@ -28,6 +28,11 @@ class Subscriber(object):
         self._callbacks[cb] = NotificationListerner(self._conn, cb, filters, self.address)
         self._callbacks[cb].start()
 
+    def is_subscribed(self, cb):
+        """Return True if the callback is already subscribed to some events.
+        """
+        return cb in self._callbacks
+
     def unsubscribe(self, cb):
         """Subscribe the given callback.
         """
@@ -35,7 +40,7 @@ class Subscriber(object):
         if server:
             server.shutdown()
 
-    def stop(self):
+    def unsubscribe_all(self):
         """Do cleanup actions.
         """
         for cb, server in self._callbacks.items():
@@ -61,4 +66,4 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        sub.stop()
+        sub.unsubscribe_all()
