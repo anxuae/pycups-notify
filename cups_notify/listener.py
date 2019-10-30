@@ -89,6 +89,7 @@ class NotificationListerner(HTTPServer):
         """
         if self._thread:
             raise EnvironmentError("Server is already running")
+        LOGGER.info("Starting RSS feed listener at %s", self._rss_uri)
         self._thread = threading.Thread(target=self.serve_forever)
         self._thread.daemon = True
         self._thread.start()
