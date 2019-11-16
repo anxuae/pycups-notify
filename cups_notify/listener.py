@@ -114,7 +114,7 @@ class NotificationListerner(HTTPServer):
         return False
 
     def notify(self, evts):
-        """Notify the subscriber for new events. Events are filtered
+        """Call the callback for each new event. Events are filtered
         because CUPS server re-sends all previously sent events.
         """
         valid_evts = []
