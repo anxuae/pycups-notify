@@ -11,3 +11,5 @@ def test_event_parsing(evts):
     assert evt.title
     assert evt.description
     assert evt.timestamp < datetime.now()
+    assert evt.address == ('hello', 631)
+    assert evt.printer == 'Print_to_VipRiser'

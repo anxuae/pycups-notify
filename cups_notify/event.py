@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import os.path as osp
 from datetime import datetime
 
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    # Python 2.x fallback
+    from urlparse import urlparse
 
 CUPS_EVT_ALL = 'all'  # All events
 CUPS_EVT_JOB_COMPLETED = 'job-completed'  # Event when the job is completed
@@ -29,11 +35,31 @@ class CupsEvent(object):
         self.guid = int(data['guid'])
         self.title = data.get('title', '')
         self.description = data.get('description', '')
+
+        address = self._parse_address(data)
+        self.printer = address[-1]
+        self.address = address[:2]
+
+        self.timestamp = self._parse_date(data)
+
+    def _parse_date(self, data):
+        """Parse the published date.
+        """
         date = data.get('pubDate', None)
         if date:
-            self.timestamp = datetime.strptime(date, "%a, %d %b %Y %H:%M:%S GMT")
-        else:
-            self.timestamp = datetime.now()
+            return datetime.strptime(date, "%a, %d %b %Y %H:%M:%S GMT")
+
+        return datetime.now()
+
+    def _parse_address(self, data):
+        """Parse the link to extract the emitter address.
+        """
+        link = data.get('link', None)
+        if link:
+            link = urlparse(link)
+            return (link.hostname, link.port, osp.basename(link.path))
+
+        return ('', '', 0)
 
     def __str__(self):
         return "[{:04d}] [{}] {} - {}".format(self.guid, self.timestamp, self.title, self.description)
