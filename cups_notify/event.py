@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import locale
+import threading
 import os.path as osp
 from datetime import datetime
+from contextlib import contextmanager
+from cups_notify import LOGGER
 
 try:
     from urllib.parse import urlparse
@@ -29,6 +33,31 @@ CUPS_EVT_SERVER_STARTED = 'server-started'  # Event when the server is initially
 CUPS_EVT_SERVER_STOPPED = 'server-stopped'  # Event when the server is shutdown
 
 
+@contextmanager
+def use_locale(name, fallback='C', lock=threading.Lock()):
+    """
+    Context manager to change temporally the language and charset.
+
+    :param name: locale name
+    :type name: str
+    :param fallback: default locale name to use if `name` not found
+    :type fallback: str
+    :param lock: lock to protect the use of `setlocale` function
+    :type lock: :py:class:`threading.Lock`
+    """
+    with lock:
+        saved = locale.setlocale(locale.LC_ALL)  # setlocale return the current
+        try:
+            try:
+                yield locale.setlocale(locale.LC_ALL, name)
+            except locale.Error:
+                LOGGER.warning("Locale language/charset '%s' not found (fallback to '%s')",
+                               name, fallback)
+                yield locale.setlocale(locale.LC_ALL, fallback)
+        finally:
+            locale.setlocale(locale.LC_ALL, saved)
+
+
 class CupsEvent(object):
 
     def __init__(self, data):
@@ -47,7 +76,8 @@ class CupsEvent(object):
         """
         date = data.get('pubDate', None)
         if date:
-            return datetime.strptime(date, "%a, %d %b %Y %H:%M:%S GMT")
+            with use_locale("en_US.UTF-8"):  # CUPS write event date in English
+                return datetime.strptime(date, "%a, %d %b %Y %H:%M:%S GMT")
 
         return datetime.now()
 
