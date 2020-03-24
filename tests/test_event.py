@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import pytest
 from datetime import datetime
 from cups_notify import event
@@ -17,7 +18,11 @@ def test_event_parsing(evts):
 
 
 def test_use_locale():
-    date = "lun, 23 Mar 2020 15:58:43 GMT"
+    if sys.platform == 'darwin':
+        # Format is different on MacOSX
+        date = "lun, 23 Mar 2020 15:58:43 GMT"
+    else:
+        date = "lun., 23 mars 2020 15:58:43 GMT"
     fr_fr = "fr_FR.UTF-8"
 
     with pytest.raises(ValueError):
