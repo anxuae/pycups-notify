@@ -3,6 +3,7 @@
    :align: center
    :alt: pycups-notify
 
+|PythonVersions| |PypiPackage| |Downloads|
 
 The ``pycups-notify`` library is an extension to the `pycups <https://github.com/OpenPrinting/pycups>`_
 one. It enables subscription to CUPS RSS notifications.
@@ -124,3 +125,16 @@ Run
 A simple listener can be started by typing the following command line::
 
      $> pycups-notify
+
+
+.. |PythonVersions| image:: https://img.shields.io/badge/python-2.7+ / 3.5+-red.svg
+   :target: https://www.python.org/downloads
+   :alt: Python 2.7+/3.5+
+
+.. |PypiPackage| image:: https://badge.fury.io/py/pycups-notify.svg
+   :target: https://pypi.org/project/pycups-notify
+   :alt: PyPi package
+
+.. |Downloads| image:: https://img.shields.io/pypi/dm/pycups-notify?color=purple
+   :target: https://pypi.org/project/pycups-notify
+   :alt: PyPi downloads
