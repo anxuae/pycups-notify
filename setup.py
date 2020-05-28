@@ -35,7 +35,7 @@ def main():
         url="https://github.com/anxuae/pycups-notify",
         download_url="https://github.com/anxuae/pycups-notify/archive/{}.tar.gz".format(cups_notify.__version__),
         license='MIT license',
-        platforms=['unix', 'linux'],
+        platforms=['unix', 'linux', 'darwin', 'win32'],
         keywords=[
             'printer',
             'CUPS',
