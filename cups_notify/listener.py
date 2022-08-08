@@ -83,6 +83,7 @@ class NotificationListerner(HTTPServer):
         self._rss_uri = 'rss://{}:{}'.format(self.server_address[0], self.server_address[1])
         self._last_guid = -1
         self._callback = callback
+        self._lock = threading.Lock()
 
     def start(self):
         """Start the notification server.
@@ -117,12 +118,13 @@ class NotificationListerner(HTTPServer):
         """Call the callback for each new event. Events are filtered
         because CUPS server re-sends all previously sent events.
         """
-        valid_evts = []
-        for evt in evts:
-            if evt.guid > self._last_guid:
-                valid_evts.append(evt.guid)
-                self._callback(evt)
-        self._last_guid = max(valid_evts)
+        with self._lock:
+            valid_evts = []
+            for evt in evts:
+                if evt.guid > self._last_guid:
+                    valid_evts.append(evt.guid)
+                    self._callback(evt)
+            self._last_guid = max(valid_evts)
 
     def cancel_subscriptions(self):
         """Cancel all subscriptions related to the server URI.
