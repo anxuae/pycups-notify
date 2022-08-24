@@ -15,18 +15,3 @@ def test_event_parsing(evts):
     assert evt.timestamp < datetime.now()
     assert evt.address == ('hello', 631)
     assert evt.printer == 'Print_to_VipRiser'
-
-
-def test_use_locale():
-    if sys.platform == 'darwin':
-        # Format is different on MacOSX
-        date = "lun, 23 Mar 2020 15:58:43 GMT"
-    else:
-        date = "lun., 23 mars 2020 15:58:43 GMT"
-    fr_fr = "fr_FR.UTF-8"
-
-    with pytest.raises(ValueError):
-        datetime.strptime(date, "%a, %d %b %Y %H:%M:%S GMT")
-
-    with event.use_locale(fr_fr):
-        datetime.strptime(date, "%a, %d %b %Y %H:%M:%S GMT")
