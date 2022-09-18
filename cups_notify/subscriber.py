@@ -4,7 +4,7 @@
 import time
 from cups_notify import LOGGER
 from cups_notify import event
-from cups_notify.listener import NotificationListerner
+from cups_notify.listener import NotificationListener
 
 
 class Subscriber(object):
@@ -25,7 +25,7 @@ class Subscriber(object):
             filters = [event.CUPS_EVT_ALL]
         if cb in self._callbacks:
             self._callbacks[cb].shutdown()
-        self._callbacks[cb] = NotificationListerner(self._conn, cb, filters, self.address)
+        self._callbacks[cb] = NotificationListener(self._conn, cb, filters, self.address)
         self._callbacks[cb].start()
 
     def is_subscribed(self, cb):

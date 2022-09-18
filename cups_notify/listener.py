@@ -73,7 +73,7 @@ class NotificationHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
 
-class NotificationListerner(HTTPServer):
+class NotificationListener(HTTPServer):
 
     def __init__(self, cups_conn, callback, filters=None, address='localhost'):
         HTTPServer.__init__(self, (address, find_free_port()), NotificationHandler)
